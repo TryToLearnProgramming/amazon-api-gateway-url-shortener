@@ -213,7 +213,7 @@ Resources:
       AccessToken:
         Ref: PersonalAcessToken
       BuildSpec: "version: 0.1\nfrontend:\n  phases:\n    preBuild:\n      commands:\n\
-        \        - cd client\n        - npm ci\n    build:\n      commands:\n    \
+        \        - cd client\n        - npm i\n    build:\n      commands:\n    \
         \    - npm run build\n  artifacts:\n    baseDirectory: client/dist\n    files:\n\
         \      - '**/*'\n  cache:\n    paths:\n      - node_modules/**/*"
       IAMServiceRole:
