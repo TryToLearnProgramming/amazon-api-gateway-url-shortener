@@ -175,7 +175,8 @@ Resources:
         - ErrorCachingMinTTL: 5
           ErrorCode: 500
         Logging:
-          Bucket: !GetAtt CloudFrontAccessLogsBucket.DomainName
+          Bucket: !GetAtt CloudFrontAccessLogsBucket.RegionalDomainName
+          Prefix: "cf-logs/"
         Enabled: true
         Origins:
           - CustomOriginConfig:
@@ -187,6 +188,38 @@ Resources:
   ##   CloudFront access logs storage
   CloudFrontAccessLogsBucket:
     Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: LogDeliveryWrite
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  CloudFrontAccessLogsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CloudFrontAccessLogsBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: 
+              - s3:PutObject
+              - s3:PutObjectAcl
+            Resource: !Sub "${CloudFrontAccessLogsBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                aws:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistro}"
 
   ##   Amplify Application for hosting
   AmplifyApp:
@@ -470,7 +503,7 @@ Outputs:
 
   VueAppAPIRoot:
     Description: API Gateway endpoint URL for linker
-    Value: !GetAtt CloudFrontDistro.DomainName
+    Value: !Sub "https://${CloudFrontDistro.DomainName}"
  
   VueAppAuthDomain: 
     Description: Domain used for authentication
@@ -501,3 +534,9 @@ Outputs:
     Value: !Sub
       - aws amplify start-job --app-id ${AmplifyID} --branch-name master --job-type RELEASE
       - AmplifyID: !GetAtt AmplifyApp.AppId
+
+
+
+
+
+
