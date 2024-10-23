@@ -192,7 +192,7 @@ Resources:
       AccessControl: LogDeliveryWrite
       OwnershipControls:
         Rules:
-          - ObjectOwnership: BucketOwnerPreferred
+          - ObjectOwnership: ObjectWriter
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
         BlockPublicPolicy: false
@@ -215,25 +215,6 @@ Resources:
               Service: cloudfront.amazonaws.com
             Action: 
               - s3:PutObject
-              - s3:PutObjectAcl
-            Resource: !Sub "${CloudFrontAccessLogsBucket.Arn}/*"
-            Condition:
-              StringEquals:
-                aws:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistro}"
-
-  CloudFrontAccessLogsBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref CloudFrontAccessLogsBucket
-      PolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: cloudfront.amazonaws.com
-            Action: 
-              - s3:PutObject
-              - s3:PutObjectAcl
             Resource: !Sub "${CloudFrontAccessLogsBucket.Arn}/*"
             Condition:
               StringEquals:
