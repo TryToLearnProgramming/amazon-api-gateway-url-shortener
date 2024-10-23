@@ -197,7 +197,7 @@ Resources:
     Properties:
       OwnershipControls:
         Rules:
-          - ObjectOwnership: BucketOwnerPreferred
+        - ObjectOwnership: BucketOwnerPreferred
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
@@ -511,4 +511,3 @@ Outputs:
           Fn::GetAtt:
           - AmplifyApp
           - AppId
-

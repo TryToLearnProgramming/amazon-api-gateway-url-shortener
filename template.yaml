@@ -54,7 +54,7 @@ Resources:
         Fn::Transform:
           Name: AWS::Include
           Parameters:
-            Location: ..\..\api.yaml
+            Location: api.yaml
   LinkTable:
     Type: AWS::DynamoDB::Table
     Properties:
