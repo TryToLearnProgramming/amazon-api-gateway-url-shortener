@@ -189,18 +189,26 @@ Resources:
   CloudFrontAccessLogsBucket:
     Type: AWS::S3::Bucket
     Properties:
+      AccessControl: LogDeliveryWrite
+      VersioningConfiguration:
+        Status: Enabled
       OwnershipControls:
         Rules:
-          - ObjectOwnership: BucketOwnerPreferred
+          - ObjectOwnership: ObjectWriter
       PublicAccessBlockConfiguration:
-        BlockPublicAcls: false
-        BlockPublicPolicy: false
-        IgnorePublicAcls: false
-        RestrictPublicBuckets: false
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
+      LifecycleConfiguration:
+        Rules:
+          - Id: DeleteOldLogs
+            Status: Enabled
+            ExpirationInDays: 90  # Adjust as needed
 
   CloudFrontAccessLogsBucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -538,6 +546,9 @@ Outputs:
     Value: !Sub
       - aws amplify start-job --app-id ${AmplifyID} --branch-name master --job-type RELEASE
       - AmplifyID: !GetAtt AmplifyApp.AppId
+
+
+
 
 
 
