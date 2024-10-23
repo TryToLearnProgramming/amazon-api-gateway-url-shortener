@@ -189,10 +189,9 @@ Resources:
   CloudFrontAccessLogsBucket:
     Type: AWS::S3::Bucket
     Properties:
-      AccessControl: LogDeliveryWrite
       OwnershipControls:
         Rules:
-          - ObjectOwnership: ObjectWriter
+          - ObjectOwnership: BucketOwnerPreferred
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
         BlockPublicPolicy: false
@@ -210,12 +209,18 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          - Effect: Allow
+          - Sid: "AllowCloudFrontServicePrincipal"
+            Effect: Allow
             Principal:
               Service: cloudfront.amazonaws.com
             Action: 
+              - s3:GetBucketAcl
+              - s3:PutBucketAcl
               - s3:PutObject
-            Resource: !Sub "${CloudFrontAccessLogsBucket.Arn}/*"
+              - s3:PutObjectAcl
+            Resource: 
+              - !GetAtt CloudFrontAccessLogsBucket.Arn
+              - !Sub "${CloudFrontAccessLogsBucket.Arn}/*"
             Condition:
               StringEquals:
                 aws:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistro}"
@@ -533,6 +538,10 @@ Outputs:
     Value: !Sub
       - aws amplify start-job --app-id ${AmplifyID} --branch-name master --job-type RELEASE
       - AmplifyID: !GetAtt AmplifyApp.AppId
+
+
+
+
 
 
 
