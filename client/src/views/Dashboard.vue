@@ -103,7 +103,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
                 class="input"
                 v-model="model.id"
                 type="text"
-                placeholder="Alias Url"
+                :placeholder="modalTypeCreate ? 'Leave empty for auto-generated ID' : 'Alias Url'"
                 required
                 :disabled="!modalTypeCreate"
               />
@@ -170,6 +170,14 @@ export default {
     ...mapState(["links"]),
   },
   methods: {
+    generateRandomId() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < 6; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    },
     toggleModal: function (type, link = null, ind = 0) {
       this.model.id = this.model.url = ""; // hacky reset
       this.modalTypeCreate = type === "create";
@@ -180,6 +188,8 @@ export default {
         this.currentIndex = ind;
         this.model.id = link.id;
         this.model.url = link.url;
+      } else if (type === "create") {
+        this.model.id = this.generateRandomId();
       }
     },
     fetchData: function () {
@@ -194,6 +204,11 @@ export default {
     },
     createLink: function () {
       let that = this;
+      // If ID is empty, generate a new one
+      if (!that.model.id.trim()) {
+        that.model.id = that.generateRandomId();
+      }
+      
       axios
         .post(`${that.apiUrl}/app`, that.model, {
           headers: {
