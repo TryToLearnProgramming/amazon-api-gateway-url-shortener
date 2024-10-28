@@ -88,7 +88,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
         <header class="modal-card-head">
           <p class="modal-card-title">
             <span v-if="modalTypeCreate">Create</span>
-            <span v-else>Update</span> Sliplink
+            <span v-else>Update</span> ShortUrl
           </p>
           <button
             class="delete"
@@ -103,7 +103,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
                 class="input"
                 v-model="model.id"
                 type="text"
-                :placeholder="modalTypeCreate ? 'Leave empty for auto-generated ID' : 'Alias Url'"
+                :placeholder="Alias Url"
                 required
                 :disabled="!modalTypeCreate"
               />
@@ -179,18 +179,21 @@ export default {
       return result;
     },
     toggleModal: function (type, link = null, ind = 0) {
-      this.model.id = this.model.url = ""; // hacky reset
       this.modalTypeCreate = type === "create";
-      this.modalIsActive = !this.modalIsActive;
-
+      
       if (type === "edit") {
         this.currentLink = link;
         this.currentIndex = ind;
         this.model.id = link.id;
         this.model.url = link.url;
       } else if (type === "create") {
-        this.model.id = this.generateRandomId();
+        this.model.url = ""; // only clear URL
+        this.model.id = this.generateRandomId(); // generate new ID
+      } else {
+        this.model.id = this.model.url = ""; // clear both for other cases
       }
+      
+      this.modalIsActive = !this.modalIsActive;
     },
     fetchData: function () {
       axios
