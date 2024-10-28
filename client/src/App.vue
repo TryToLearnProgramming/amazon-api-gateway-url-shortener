@@ -17,53 +17,51 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
 <template>
   <div id="app">
     <section class="section">
-      <nav
-        class="navbar is-fixed-top is-dark"
-        role="navigation"
-        aria-label="main navigation"
-      >
-        <div class="navbar-brand">
-          <div class="navbar-item">
-            <h1 class="title has-text-white">{{ appName }}</h1>
-          </div>
-          <a
-            role="button"
-            class="navbar-burger burger"
-            aria-label="menu"
-            aria-expanded="false"
-            data-target="navbarCollapse"
-            v-bind:class="{ 'is-active': isOpen }"
-            @click="isOpen = !isOpen"
-          >
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
-        </div>
-
-        <div
-          id="navbarCollapse"
-          class="navbar-menu"
-          v-bind:class="{ 'is-active': isOpen }"
-        >
-          <div class="navbar-start">
-            <!-- <router-link class="navbar-item" to="/">Dashboard</router-link> -->
-          </div>
-
-          <div class="navbar-end">
+      <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+        <div class="navbar-background"></div>
+        <div class="navbar-content">
+          <div class="navbar-brand">
+            <div class="navbar-item">
+              <h1 class="title has-text-white">{{ appName }}</h1>
+            </div>
             <a
-              class="navbar-item"
-              v-if="authorized"
-              v-on:click="logout()"
-              v-bind:href="logOutUrl"
-              >Log Out</a
+              role="button"
+              class="navbar-burger burger"
+              aria-label="menu"
+              aria-expanded="false"
+              data-target="navbarCollapse"
+              v-bind:class="{ 'is-active': isOpen }"
+              @click="isOpen = !isOpen"
             >
-            <a class="navbar-item" v-if="!authorized" v-bind:href="signUpUrl"
-              >Sign up</a
-            >
-            <a class="navbar-item" v-if="!authorized" v-bind:href="logInUrl"
-              >Log in</a
-            >
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </a>
+          </div>
+
+          <div
+            id="navbarCollapse"
+            class="navbar-menu"
+            v-bind:class="{ 'is-active': isOpen }"
+          >
+            <div class="navbar-end">
+              <a
+                class="navbar-item auth-button"
+                v-if="authorized"
+                v-on:click="logout()"
+                v-bind:href="logOutUrl"
+              >Log Out</a>
+              <a 
+                class="navbar-item auth-button" 
+                v-if="!authorized" 
+                v-bind:href="signUpUrl"
+              >Sign up</a>
+              <a 
+                class="navbar-item auth-button" 
+                v-if="!authorized" 
+                v-bind:href="logInUrl"
+              >Log in</a>
+            </div>
           </div>
         </div>
       </nav>
@@ -75,7 +73,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
         </div>
         <div v-else>
           <h1 class="title">Welcome to {{ appName }}</h1>
-          <h2 class="subtitle">The NEWEST URL shortener on the block.</h2>
+          <h2 class="subtitle">Shorten your urls with ease.</h2>
           <p v-if="linkNotFound">
             We're sorry, that link could not be found.
             <a v-bind:href="signUpUrl">Sign up</a> or
@@ -103,7 +101,7 @@ export default {
   name: "app",
   data() {
     return {
-      appName: `Magic ${process.env.VUE_APP_NAME}`,
+      appName: `Url Shortener ${process.env.VUE_APP_NAME}`,
       signUpUrl: `${authDomain}/signup?response_type=code&client_id=${clientId}&redirect_uri=${redUrl}`,
       logInUrl: `${authDomain}/login?response_type=code&client_id=${clientId}&redirect_uri=${redUrl}`,
       logOutUrl: `${authDomain}/logout?client_id=${clientId}&logout_uri=${redUrl}`,
@@ -191,3 +189,74 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.navbar {
+  position: relative;
+  padding: 0;
+  min-height: 4rem;
+}
+
+.navbar-background {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #57b3de, #3498db);  
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.navbar-content {
+  position: relative;
+  width: 100%;
+  padding: 0 1rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand {
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.navbar-menu {
+  background: transparent;
+  flex: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-end {
+  display: flex;
+  align-items: center;
+  height: 4rem;
+}
+
+.auth-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white !important;
+  border-radius: 0.375rem;
+  margin: 0.5rem;
+  transition: background-color 0.2s;
+  height: auto;
+}
+
+.auth-button:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.navbar-burger {
+  color: white;
+}
+
+.navbar-menu {
+  background: transparent;
+}
+
+@media screen and (max-width: 1023px) {
+  .navbar-menu.is-active {
+    background: linear-gradient(to right, #57b3de, #3498db); 
+  }
+}
+</style>

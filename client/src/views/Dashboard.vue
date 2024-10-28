@@ -18,14 +18,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
   <div class="dashboard">
     <div class="columns is-mobile">
       <div class="column">
-        <h1 class="title">Shortcuts</h1>
+        <h1 class="title">Shortened Urls</h1>
       </div>
       <div class="column is-2-desktop is-half-mobile">
         <button
           class="button is-info is-outlined is-fullwidth"
           v-on:click="toggleModal('create')"
         >
-          New Shortcut
+          Short new Url
         </button>
       </div>
     </div>
@@ -103,7 +103,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
                 class="input"
                 v-model="model.id"
                 type="text"
-                placeholder="Short Link"
+                placeholder="Alias Url"
                 required
                 :disabled="!modalTypeCreate"
               />
@@ -129,7 +129,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
           <button
             v-if="modalTypeCreate"
             v-on:click="createLink()"
-            class="button is-success"
+            class="button"
+            style="background-color: #57b3de; color: white; border: none;"
           >
             Create
           </button>
@@ -260,3 +261,4 @@ export default {
   },
 };
 </script>
+
