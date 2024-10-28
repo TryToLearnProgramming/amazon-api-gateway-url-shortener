@@ -25,7 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
           class="button is-info is-outlined is-fullwidth"
           v-on:click="toggleModal('create')"
         >
-          Short new Url
+          Short New Url
         </button>
       </div>
     </div>
